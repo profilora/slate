@@ -3,8 +3,9 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - python
   - javascript
+  - python
+  - golang
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -30,7 +31,7 @@ Welcome to the Profilora API, before You start to hit request on some of our end
 ```shell
 # With shell, you can just pass the correct header with each request
 curl "https://api.profilora.com/ping" \
-  -H "Authorization: basic <authkey>"
+  -H "Authorization: Basic <authkey>"
 ```
 
 ```javascript
@@ -45,6 +46,37 @@ const profilora = axios.create({
 const result = profilora.get('/ping');
 ```
 
+```python
+import requests
+
+result = requests.get('https://api.profilora.com/ping', 
+  auth=('<key>', '<secret>'),
+  headers={
+    'Content-Type': 'application/json',
+  })
+```
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/imroc/req"
+)
+
+func main() {
+	header := req.Header{
+		"Accept":        "application/json",
+		"Authorization": "Basic <authkey>",
+	}
+
+	resp, _ := req.Get("https://api.profilora.com/ping", header)
+
+	fmt.Println(resp.ToString())
+}
+
+```
+
 > Make sure to make `<authkey>` with your base64 encode of `<key>:<secret>`.
 
 Profilora expect you to attach an Authorization key on every request
@@ -56,12 +88,12 @@ and attached as `Authorization` header with prefix `basic`.
 `Authorization: basic <authkey>`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+Again, You must replace <code><authkey></code> with your personal API key encoded with **Base64** in format `<key>:<secret>`.
 </aside>
 
-# Kittens
+# WhatsApp API
 
-## Get All Kittens
+## Send Message
 
 ```ruby
 require 'kittn'
