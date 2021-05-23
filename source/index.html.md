@@ -56,7 +56,7 @@ result = requests.get('https://api.profilora.com/ping',
   })
 ```
 
-```go
+```golang
 package main
 
 import (
