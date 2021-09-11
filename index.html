@@ -291,7 +291,7 @@
     </script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;javascript&quot;,&quot;python&quot;,&quot;golang&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;javascript&quot;,&quot;python&quot;,&quot;go&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -304,7 +304,7 @@
               <a href="#" data-language-name="shell">shell</a>
               <a href="#" data-language-name="javascript">javascript</a>
               <a href="#" data-language-name="python">python</a>
-              <a href="#" data-language-name="golang">golang</a>
+              <a href="#" data-language-name="go">go</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -344,23 +344,25 @@
       <div class="dark-box"></div>
       <div class="content">
         <h1 id='introduction'>Introduction</h1>
-<p>Welcome to the Profilora API, before You start to hit request on some of our endpoints, it is required to integrate Your WhatsApp account and creating API Client to get the <code>key</code> and the <code>secret</code> code. </p>
+<p>Welcome to the Profilora API,</p>
+
+<p>before You start to hit request on some of our endpoints, it is required to integrate Your <strong>WhatsApp Account</strong> and creating an <strong>API Client</strong> to get the <code>key</code> and the <code>secret</code> code before going any further.</p>
 <h1 id='authentication'>Authentication</h1>
 <blockquote>
-<p>To authorize, use this code:</p>
+<p>To test the API, use this code:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 curl <span class="s2">"https://api.profilora.com/ping"</span> <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Authorization: Basic &lt;authkey&gt;"</span>
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">profilora</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+<span class="kd">const</span> <span class="nx">profiloraApi</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
   <span class="na">baseURL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://api.profilora.com</span><span class="dl">'</span><span class="p">,</span>
   <span class="na">auth</span><span class="p">:</span> <span class="p">{</span>
     <span class="na">username</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;key&gt;</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">password</span><span class="p">:</span> <span class="dl">'</span><span class="s1">&lt;secret&gt;</span><span class="dl">'</span>
   <span class="p">}</span>
 <span class="p">})</span>
-<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">profilora</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/ping</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">profiloraApi</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/ping</span><span class="dl">'</span><span class="p">);</span>
 </code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://api.profilora.com/ping'</span><span class="p">,</span> 
@@ -385,84 +387,146 @@ curl <span class="s2">"https://api.profilora.com/ping"</span> <span class="se">\
 
     <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">ToString</span><span class="p">())</span>
 <span class="p">}</span>
-
 </code></pre></div>
 <blockquote>
-<p>Make sure to make <code>&lt;authkey&gt;</code> with your base64 encode of <code>&lt;key&gt;:&lt;secret&gt;</code>.</p>
+<p>Make sure to encrypt <code>&lt;authkey&gt;</code> using base64 encode with format <code>&lt;key&gt;:&lt;secret&gt;</code>.</p>
 </blockquote>
 
-<p>Profilora expect you to attach an Authorization key on every request</p>
+<p>Profilora expect you to attach an Authorization key on every API request.</p>
 
-<p>The auth key should be encoded using <code>base64</code> encryption with format <code>&lt;your-key&gt;:&lt;your-secret&gt;</code></p>
+<p>The auth key should be encoded using <code>base64</code> encryption, formatted  as:</p>
 
-<p>and attached as <code>Authorization</code> header with prefix <code>basic</code>.</p>
+<p><code>&lt;your-key&gt;:&lt;your-secret&gt;</code></p>
 
-<p><code>Authorization: basic &lt;authkey&gt;</code></p>
+<p>and attached as <code>Authorization</code> header with prefix <code>Basic</code>.</p>
+
+<p><code>Authorization: Basic &lt;authkey&gt;</code></p>
+
+<p>You will get JSON response <code>{&quot;status&quot;:&quot;ok&quot;}</code> once the request API is valid. This is a good signal to continue with another APIs.</p>
 
 <aside class="notice">
-Again, You must replace <code><authkey></code> with your personal API key encoded with **Base64** in format `<key>:<secret>`.
+Again!, You must replace <code><authkey></code> with your personal API key encoded with <strong>Base64</strong> in `key:secret` format.
 </aside>
-<h1 id='whatsapp-api'>WhatsApp API</h1><h2 id='send-message'>Send Message</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h1 id='whatsapp-api'>WhatsApp API</h1><h2 id='send-message'>Send Message</h2><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  <span class="nt">--url</span> https://api.profilora.com/whatsapp/send-message <span class="se">\</span>
+  <span class="nt">--header</span> <span class="s1">'Authorization: Basic &lt;authkey&gt;'</span> <span class="se">\</span>
+  <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">--data</span> <span class="s1">'{
+    "to": "6285xxx@s.whatsapp.net",
+    "sender": "6285xxx@s.whatsapp.net",
+    "message": "Sent from API"
+  }'</span>
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="c1">// reuse "profiloraApi" from previous example</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">body</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">profiloraApi</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/whatsapp/send-message</span><span class="dl">'</span><span class="p">);</span>
+<span class="c1">// 200: OK, message processed</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">200</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">body</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre></div><div class="highlight"><pre class="highlight python tab-python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="s">'https://api.profilora.com/whatsapp/send-message'</span><span class="p">,</span> 
+  <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="s">'&lt;key&gt;'</span><span class="p">,</span> <span class="s">'&lt;secret&gt;'</span><span class="p">),</span>
+  <span class="n">headers</span><span class="o">=</span><span class="p">{</span>
+    <span class="s">'Content-Type'</span><span class="p">:</span> <span class="s">'application/json'</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">({</span>
+    <span class="s">'sender'</span><span class="p">:</span> <span class="s">'6285xxx@s.whatsapp.net'</span><span class="p">,</span>
+    <span class="s">'to'</span><span class="p">:</span> <span class="s">'6285xxx@s.whatsapp.net'</span><span class="p">,</span>
+    <span class="s">'message'</span><span class="p">:</span> <span class="s">'Sent from API'</span>
+  <span class="p">}))</span>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="p">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="n">kittens</span><span class="p">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre></div><div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span> <span class="se">\</span>
-  <span class="nt">-H</span> <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="kd">const</span> <span class="nx">kittn</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">kittn</span><span class="dl">'</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div><div class="highlight"><pre class="highlight go tab-go"><code><span class="k">package</span> <span class="n">main</span>
 
-<span class="kd">let</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">kittn</span><span class="p">.</span><span class="nx">authorize</span><span class="p">(</span><span class="dl">'</span><span class="s1">meowmeowmeow</span><span class="dl">'</span><span class="p">);</span>
-<span class="kd">let</span> <span class="nx">kittens</span> <span class="o">=</span> <span class="nx">api</span><span class="p">.</span><span class="nx">kittens</span><span class="p">.</span><span class="kd">get</span><span class="p">();</span>
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"github.com/imroc/req"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">header</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">Header</span><span class="p">{</span>
+        <span class="s">"Accept"</span><span class="o">:</span>        <span class="s">"application/json"</span><span class="p">,</span>
+        <span class="s">"Authorization"</span><span class="o">:</span> <span class="s">"Basic &lt;authkey&gt;"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+  <span class="n">payloads</span> <span class="o">:=</span> <span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{}{</span>
+    <span class="s">"sender"</span><span class="o">:</span> <span class="s">"6285xxx@s.whatsapp.net"</span><span class="p">,</span>
+    <span class="s">"to"</span><span class="o">:</span> <span class="s">"6285xxx@s.whatsapp.net"</span><span class="p">,</span>
+    <span class="s">"message"</span><span class="o">:</span> <span class="s">"Sent from API"</span><span class="p">,</span>
+  <span class="p">}</span>
+
+  <span class="n">bodyJson</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">BodyJSON</span><span class="p">(</span><span class="o">&amp;</span><span class="n">payloads</span><span class="p">)</span>
+
+    <span class="n">resp</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">req</span><span class="o">.</span><span class="n">Post</span><span class="p">(</span>
+    <span class="s">"https://api.profilora.com/whatsapp/send-message"</span><span class="p">,</span>
+    <span class="n">header</span><span class="p">,</span>
+    <span class="n">bodyJson</span><span class="p">,</span>
+  <span class="p">)</span>
+
+  <span class="n">result</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="k">interface</span><span class="p">{})</span>
+  <span class="n">resp</span><span class="o">.</span><span class="n">ToJSON</span><span class="p">(</span><span class="o">&amp;</span><span class="n">result</span><span class="p">)</span>
+<span class="p">}</span>
 </code></pre></div>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>The above request returns JSON structured like this:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"eventId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"p0YRyUyFLpbNgB_VGq2Ga"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Message will be processed"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div>
-<p>This endpoint retrieves all kittens.</p>
+<p>Send a text message.</p>
 <h3 id='http-request'>HTTP Request</h3>
-<p><code>GET http://example.com/api/kittens</code></p>
-<h3 id='query-parameters'>Query Parameters</h3>
+<p><code>POST https://api.profilora.com/whatsapp/send-message</code></p>
+<h3 id='json-parameters'>JSON Parameters</h3>
 <table><thead>
 <tr>
 <th>Parameter</th>
-<th>Default</th>
+<th>Required</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>sender</td>
+<td>true</td>
+<td>WhatsApp sender identity, the number should match with one of Your active WhatsApp Agents</td>
 </tr>
 <tr>
-<td>available</td>
+<td>to</td>
 <td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>WhatsApp recipient identity</td>
+</tr>
+<tr>
+<td>message</td>
+<td>true</td>
+<td>Text message to send</td>
+</tr>
+</tbody></table>
+<h3 id='json-response'>JSON Response</h3>
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>eventId</td>
+<td>string</td>
+<td>The event to track for delivery status via WebHook</td>
+</tr>
+<tr>
+<td>messae</td>
+<td>string</td>
+<td>Status message</td>
 </tr>
 </tbody></table>
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Successful request API will return "200" status code
 </aside>
+
+<aside class="warning">Successful request for sending message doesn't mean it's delivered, You should check the delivery status via our WebHook request, matching with the <strong>eventId<strong>.</aside>
 <h2 id='get-a-specific-kitten'>Get a Specific Kitten</h2><div class="highlight"><pre class="highlight ruby tab-ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
 
 <span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
@@ -610,7 +674,7 @@ This error section is stored in a separate file in <code>includes/_errors.md</co
                 <a href="#" data-language-name="shell">shell</a>
                 <a href="#" data-language-name="javascript">javascript</a>
                 <a href="#" data-language-name="python">python</a>
-                <a href="#" data-language-name="golang">golang</a>
+                <a href="#" data-language-name="go">go</a>
           </div>
       </div>
     </div>
