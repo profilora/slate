@@ -5,7 +5,7 @@ language_tabs: # must be one of https://git.io/vQNgJ
   - shell
   - javascript
   - python
-  - golang
+  - go
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -21,11 +21,13 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Profilora API, before You start to hit request on some of our endpoints, it is required to integrate Your WhatsApp account and creating API Client to get the `key` and the `secret` code. 
+Welcome to the Profilora API,
+
+before You start to hit request on some of our endpoints, it is required to integrate Your **WhatsApp Account** and creating an **API Client** to get the `key` and the `secret` code before going any further.
 
 # Authentication
 
-> To authorize, use this code:
+> To test the API, use this code:
 
 
 ```shell
@@ -36,14 +38,14 @@ curl "https://api.profilora.com/ping" \
 
 ```javascript
 const axios = require('axios');
-const profilora = axios.create({
+const profiloraApi = axios.create({
   baseURL: 'https://api.profilora.com',
   auth: {
     username: '<key>',
     password: '<secret>'
   }
 })
-const result = profilora.get('/ping');
+const result = profiloraApi.get('/ping');
 ```
 
 ```python
@@ -56,7 +58,7 @@ result = requests.get('https://api.profilora.com/ping',
   })
 ```
 
-```golang
+```go
 package main
 
 import (
@@ -74,90 +76,134 @@ func main() {
 
 	fmt.Println(resp.ToString())
 }
-
 ```
 
-> Make sure to make `<authkey>` with your base64 encode of `<key>:<secret>`.
+> Make sure to encrypt `<authkey>` using base64 encode with format `<key>:<secret>`.
 
-Profilora expect you to attach an Authorization key on every request
+Profilora expect you to attach an Authorization key on every API request.
 
-The auth key should be encoded using `base64` encryption with format `<your-key>:<your-secret>`
+The auth key should be encoded using `base64` encryption, formatted  as:
 
-and attached as `Authorization` header with prefix `basic`.
+`<your-key>:<your-secret>`
 
-`Authorization: basic <authkey>`
+and attached as `Authorization` header with prefix `Basic`.
+
+`Authorization: Basic <authkey>`
+
+You will get JSON response `{"status":"ok"}` once the request API is valid. This is a good signal to continue with another APIs.
 
 <aside class="notice">
-Again, You must replace <code><authkey></code> with your personal API key encoded with **Base64** in format `<key>:<secret>`.
+Again!, You must replace <code><authkey></code> with your personal API key encoded with <strong>Base64</strong> in `key:secret` format.
 </aside>
-
 # WhatsApp API
 
 ## Send Message
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
 ```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
+curl -X POST \
+  --url https://api.profilora.com/whatsapp/send-message \
+  --header 'Authorization: Basic <authkey>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"to": "6285xxx@s.whatsapp.net",
+	"sender": "6285xxx@s.whatsapp.net",
+	"message": "Sent from API"
+  }'
 ```
 
 ```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+// reuse "profiloraApi" from previous example
+const { status, body } = profiloraApi.post('/whatsapp/send-message');
+// 200: OK, message processed
+if (status === 200) {
+  console.log(body)
+}
 ```
 
-> The above command returns JSON structured like this:
+```python
+import requests
+import json
+
+result = requests.post('https://api.profilora.com/whatsapp/send-message', 
+  auth=('<key>', '<secret>'),
+  headers={
+    'Content-Type': 'application/json',
+  },
+  data=json.dumps({
+    'sender': '6285xxx@s.whatsapp.net',
+    'to': '6285xxx@s.whatsapp.net',
+    'message': 'Sent from API'
+  }))
+
+print(result.json())
+```
+
+```go
+package main
+
+import (
+	"github.com/imroc/req"
+)
+
+func main() {
+	header := req.Header{
+		"Accept":        "application/json",
+		"Authorization": "Basic <authkey>",
+	}
+
+  payloads := map[string]interface{}{
+    "sender": "6285xxx@s.whatsapp.net",
+    "to": "6285xxx@s.whatsapp.net",
+    "message": "Sent from API",
+  }
+
+  bodyJson := req.BodyJSON(&payloads)
+
+	resp, _ := req.Post(
+    "https://api.profilora.com/whatsapp/send-message",
+    header,
+    bodyJson,
+  )
+
+  result := make(map[string]interface{})
+  resp.ToJSON(&result)
+}
+```
+
+> The above request returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+  "eventId": "p0YRyUyFLpbNgB_VGq2Ga",
+  "message": "Message will be processed"
+}
 ```
 
-This endpoint retrieves all kittens.
+Send a text message.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST https://api.profilora.com/whatsapp/send-message`
 
-### Query Parameters
+### JSON Parameters
 
-Parameter | Default | Description
+Parameter | Required | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+sender | true | WhatsApp sender identity, the number should match with one of Your active WhatsApp Agents
+to | true | WhatsApp recipient identity
+message | true | Text message to send
+
+### JSON Response
+
+Parameter | type | Description
+--------- | ------- | -----------
+eventId | string | The event to track for delivery status via WebHook
+messae | string | Status message
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+Successful request API will return "200" status code
 </aside>
+<aside class="warning">Successful request for sending message doesn't mean it's delivered, You should check the delivery status via our WebHook request, matching with the <strong>eventId<strong>.</aside>
 
 ## Get a Specific Kitten
 
